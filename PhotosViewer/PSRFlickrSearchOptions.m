@@ -46,7 +46,7 @@
         [searchString appendFormat:@"&extra=%@",[self.extra componentsJoinedByString:@","]];
     }
     if (self.page > 0){
-        [searchString appendFormat:@"&page=%@",self.page];
+        [searchString appendFormat:@"&page=%d",self.page];
     }
     if (self.unitsLimit > 0){
         [searchString appendFormat:@"&per_page=%d",self.unitsLimit];

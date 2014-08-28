@@ -36,16 +36,33 @@ const NSString * PSRDefaultApiUrl = @"https://api.flickr.com/services/rest/?";
     return [NSString stringWithFormat:@"%@%@%@",PSRDefaultApiUrl,method,[self keyRequestString]];
 }
 
+- (NSDictionary *)serializeRequest:(NSString *)requestString
+{
+    NSData *response = [NSData dataWithContentsOfURL:[NSURL URLWithString:requestString]];
+    
+    NSLog(@"result bytes:%lu",response.length);
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:response options:0 error:nil];
+    return json;
+}
+
+- (NSDictionary *)fetchRequestMethodName:(NSString *)methodName options:(PSRFlickrSearchOptions *)options
+{
+    NSString *requestString = [NSString stringWithFormat:@"%@%@",[self stringWithMethod:[NSString stringWithFormat:@"method=%@",methodName]],[options requestString]];
+    requestString = [requestString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    NSDictionary *json = [self serializeRequest:requestString];
+    return json;
+}
+
 - (id)requestPhotosWithOptions:(PSRFlickrSearchOptions *)options
 {
     NSParameterAssert(options);
     
-    NSString *requestString = [NSString stringWithFormat:@"%@%@",[self stringWithMethod:@"method=flickr.photos.search"],[options requestString]];
+    NSDictionary *json = [self fetchRequestMethodName:@"flickr.photos.search"
+                                              options:options];
+    NSLog(@"received: %@",json);
     
-    NSData *response = [NSData dataWithContentsOfURL:[NSURL URLWithString:requestString]];
-    
-    NSString *responseString = [[NSString alloc]initWithData:response encoding:NSUTF8StringEncoding];
-    return responseString;
+    return json[@"photos"][@"photo"];
 }
 
 #pragma mark - Private
