@@ -8,6 +8,8 @@
 
 #import "ViewController.h"
 
+#import "PSRFlickrAPI.h"
+
 @interface ViewController ()
 
 @end
@@ -19,9 +21,15 @@
     // Do any additional setup after loading the view, typically from a nib.
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    NSString *apiKey = @"";
+    
+    PSRFlickrSearchOptions *options = [[PSRFlickrSearchOptions alloc]initWithTags:@[@"World"]];
+    
+    NSString *result = [[[PSRFlickrAPI alloc]initWithAPIKey:apiKey] requestPhotosWithOptions:options];
 }
 
 @end
