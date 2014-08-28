@@ -12,11 +12,10 @@
 #import "PSRFlickrPhoto.h"
 
 @interface ViewController ()
-
 @end
 
 @implementation ViewController
-            
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
@@ -25,8 +24,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    NSString *apiKey = @"";
     
     PSRFlickrSearchOptions *options = [[PSRFlickrSearchOptions alloc]initWithTags:@[@"World"]];
     options.unitsLimit = 55;
@@ -38,7 +35,7 @@
                       @"date_upload",
                       @"owner_name"];
 
-    NSArray *photos = [[[PSRFlickrAPI alloc]initWithAPIKey:apiKey] requestPhotosWithOptions:options];
+    NSArray *photos = [[[PSRFlickrAPI alloc]init] requestPhotosWithOptions:options];
     NSParameterAssert(photos.count > 0);
     
     [self showPhotosFromEnumerator:[photos objectEnumerator]];

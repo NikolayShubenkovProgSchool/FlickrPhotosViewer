@@ -13,8 +13,6 @@
 
 @interface PSRFlickrAPI : NSObject
 
-- (instancetype)initWithAPIKey:(NSString *)apiKey;
-
 - (id)requestPhotosWithOptions:(PSRFlickrSearchOptions *)options;
 
 @end

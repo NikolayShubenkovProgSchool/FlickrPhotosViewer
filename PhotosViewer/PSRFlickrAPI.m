@@ -25,6 +25,11 @@ const NSString * PSRDefaultApiUrl = @"https://api.flickr.com/services/rest/?";
     }
     return self;
 }
+- (instancetype)init
+{
+    return [self initWithAPIKey:@"90f769c05a5f121ea4e592ea0147b916"];
+}
+
 
 - (NSString *)keyRequestString
 {
