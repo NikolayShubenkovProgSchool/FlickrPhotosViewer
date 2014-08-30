@@ -65,8 +65,6 @@ const NSString * PSRDefaultApiUrl = @"https://api.flickr.com/services/rest/?";
     
     NSDictionary *json = [self fetchRequestMethodName:@"flickr.photos.search"
                                               options:options];
-    NSLog(@"received: %@",json);
-    
     return json[@"photos"][@"photo"];
 }
 
