@@ -37,10 +37,10 @@
         [searchString appendFormat:@"&contentType=%d",self.contentType];
     }
     if (self.coordinate.latitude != 0 && self.coordinate.longitude != 0){
-        [searchString appendFormat:@"&lat=%f,&lon=%f",self.coordinate.latitude, self.coordinate.longitude];
+        [searchString appendFormat:@"&lat=%.4f&lon=%.4f",self.coordinate.latitude, self.coordinate.longitude];
     }
     if (self.radiousKilometers > 0.01){
-        [searchString appendFormat:@"&radious=%f",self.radiousKilometers];
+        [searchString appendFormat:@"&radious=%.2f",self.radiousKilometers];
     }
     if (self.extra){
         [searchString appendFormat:@"&extra=%@",[self.extra componentsJoinedByString:@","]];
@@ -48,8 +48,8 @@
     if (self.page > 0){
         [searchString appendFormat:@"&page=%d",self.page];
     }
-    if (self.unitsLimit > 0){
-        [searchString appendFormat:@"&per_page=%d",self.unitsLimit];
+    if (self.itemsLimit > 0){
+        [searchString appendFormat:@"&per_page=%d",self.itemsLimit];
     }
     return [searchString copy];
 }

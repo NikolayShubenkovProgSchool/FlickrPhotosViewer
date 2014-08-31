@@ -7,6 +7,7 @@
 //
 
 #import "PSRFlickrAPI.h"
+#import "PSRFlickrPhoto.h"
 
 @interface PSRFlickrAPI ()
 @property (nonatomic, copy)NSString *key;
@@ -25,11 +26,25 @@ const NSString * PSRDefaultApiUrl = @"https://api.flickr.com/services/rest/?";
     }
     return self;
 }
+
 - (instancetype)init
 {
     return [self initWithAPIKey:@"90f769c05a5f121ea4e592ea0147b916"];
 }
 
+- (id)requestPhotosWithOptions:(PSRFlickrSearchOptions *)options
+{
+    NSParameterAssert(options);
+    
+    NSDictionary *json = [self fetchRequestMethodName:@"flickr.photos.search"
+                                              options:options];
+    //simulate some network delay
+    [NSThread sleepForTimeInterval:1.5];
+    NSArray *photosInfoes = json[@"photos"][@"photo"];
+    return [PSRFlickrPhoto photosWithInfoes:photosInfoes];
+}
+
+#pragma mark - Private
 
 - (NSString *)keyRequestString
 {
@@ -59,15 +74,6 @@ const NSString * PSRDefaultApiUrl = @"https://api.flickr.com/services/rest/?";
     return json;
 }
 
-- (id)requestPhotosWithOptions:(PSRFlickrSearchOptions *)options
-{
-    NSParameterAssert(options);
-    
-    NSDictionary *json = [self fetchRequestMethodName:@"flickr.photos.search"
-                                              options:options];
-    return json[@"photos"][@"photo"];
-}
 
-#pragma mark - Private
 
 @end

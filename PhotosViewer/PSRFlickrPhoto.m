@@ -9,10 +9,28 @@
 #import "PSRFlickrPhoto.h"
 
 @interface PSRFlickrPhoto()
+
 @property (nonatomic, strong) NSDictionary *info;
+
 @end
 
 @implementation PSRFlickrPhoto
+
++ (NSArray *)photosWithInfoes:(NSArray *)infoes
+{
+    NSMutableArray *photos = [NSMutableArray arrayWithCapacity:infoes.count];
+    [infoes enumerateObjectsUsingBlock:^(NSDictionary *anInfo, NSUInteger idx, BOOL *stop) {
+        [photos addObject:[self photoWithInfo:anInfo]];
+    }];
+    //imitate long parsing process
+    [NSThread sleepForTimeInterval:2];
+    return photos;
+}
+
++ (instancetype)photoWithInfo:(NSDictionary *)info
+{
+    return [[self alloc]initWithInfo:info];
+}
 
 - (instancetype)initWithInfo:(NSDictionary *)info
 {
@@ -22,9 +40,19 @@
     return self;
 }
 
-- (NSURL *)lowQualityUrl
+- (NSURL *)highQualityURL
 {
-    NSString *photoURLString = [NSString stringWithFormat:@"http://farm%@.static.flickr.com/%@/%@_%@_b.jpg", [self.info objectForKey:@"farm"], [self.info objectForKey:@"server"], [self.info objectForKey:@"id"], [self.info objectForKey:@"secret"]];
+    return [self urlForQualityTag:@"b"];
+}
+
+- (NSURL *)lowQualityURL
+{
+    return [self urlForQualityTag:@"s"];
+}
+
+- (NSURL *)urlForQualityTag:(NSString *)qualityTag
+{
+    NSString *photoURLString = [NSString stringWithFormat:@"http://farm%@.static.flickr.com/%@/%@_%@_%@.jpg", [self.info objectForKey:@"farm"], [self.info objectForKey:@"server"], [self.info objectForKey:@"id"], [self.info objectForKey:@"secret"], qualityTag];
     return [NSURL URLWithString:photoURLString];
 }
 

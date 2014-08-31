@@ -27,9 +27,14 @@
 {
     [super viewDidAppear:animated];
     
-    PSRFlickrSearchOptions *options = [[PSRFlickrSearchOptions alloc]initWithTags:@[@"World"]];
-    options.unitsLimit = 55;
+    //add any tags you want
+    PSRFlickrSearchOptions *options = [[PSRFlickrSearchOptions alloc]initWithTags:@[@"Kremlin]",@"arbat",@"gorky park"]];
+    
+    options.itemsLimit = 55;
     options.page = 22;
+    options.coordinate = CLLocationCoordinate2DMake(55.756151, 37.61727);
+    options.radiousKilometers = 50;
+    
     options.extra = @[@"original_format",
                       @"tags",
                       @"description",
@@ -37,24 +42,23 @@
                       @"date_upload",
                       @"owner_name"];
 
+    //this operation may take several seconds
     NSArray *photos = [[[PSRFlickrAPI alloc]init] requestPhotosWithOptions:options];
     NSParameterAssert(photos.count > 0);
-    [self showPhotosWithWebImageWithEnumerator:[photos objectEnumerator]
-                                   placeHolder:nil];
-//    [self shoxwPhotosFromEnumerator:[photos objectEnumerator]];
+    [self showPhotosFromEnumerator:[photos objectEnumerator]];
+//    [self showPhotosWithWebImageWithEnumerator:[photos objectEnumerator]
+//                                   placeHolder:nil];
 }
 
 
-//[UIApplication sharedApplication].networkActivityIndicatorVisible = YES; // bad
-//spinner
+
 - (void)showPhotosWithWebImageWithEnumerator:(NSEnumerator *)enumarator placeHolder:(UIImage *)placeHolder
 {
-    NSDictionary *photoInfo = [enumarator nextObject];
-    if (!photoInfo){
+    PSRFlickrPhoto *parsedPhoto = [enumarator nextObject];
+    if (!parsedPhoto){
         return;
     }
-    PSRFlickrPhoto *parsedPhoto = [[PSRFlickrPhoto alloc]initWithInfo:photoInfo];
-    NSURL *url = [parsedPhoto lowQualityUrl];
+    NSURL *url = [parsedPhoto highQualityURL];
     
     [self.photo sd_setImageWithURL:url
                   placeholderImage:placeHolder
@@ -77,11 +81,13 @@
     dispatch_queue_t downloadQueue = dispatch_queue_create("download queue", 0);
     dispatch_async(downloadQueue, ^{
         NSLog(@"queue operation");
-        PSRFlickrPhoto *parsedPhoto = [[PSRFlickrPhoto alloc]initWithInfo:[enumarator nextObject]];
+        PSRFlickrPhoto *parsedPhoto = [enumarator nextObject];
+        if (!parsedPhoto){
+            return;
+        }
         
-        NSData *photoData = [NSData dataWithContentsOfURL:[parsedPhoto lowQualityUrl]];
+        NSData *photoData = [NSData dataWithContentsOfURL:[parsedPhoto highQualityURL]];
         
-        [NSThread sleepForTimeInterval:1];
         NSLog(@"image downloaded");
         
         dispatch_queue_t mainQueue = dispatch_get_main_queue();
@@ -92,9 +98,6 @@
         });
     });
     NSLog(@"after callong dispatch_asynq");
-#warning напиши иначе
 }
-
-//- (UICollectionViewCell *)coll
 
 @end

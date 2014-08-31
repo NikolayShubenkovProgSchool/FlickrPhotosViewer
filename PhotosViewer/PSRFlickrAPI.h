@@ -11,8 +11,11 @@
 #import "PSRFlickrSearchOptions.h"
 
 
+@class PSRFlickrPhoto;
+
 @interface PSRFlickrAPI : NSObject
 
+//returns array of PSRFlickrPhoto items
 - (id)requestPhotosWithOptions:(PSRFlickrSearchOptions *)options;
 
 @end

@@ -10,7 +10,14 @@
 
 @interface PSRFlickrPhoto : NSObject
 
-- (instancetype)initWithInfo:(NSDictionary *)info;
-- (NSURL *)lowQualityUrl;
++ (instancetype)photoWithInfo:(NSDictionary *)info;
+
+//return Array of FlickrPhoto instanses
+//parse photos for some sec, so interface may freeze for some time
+//if you call it from main thread
++ (NSArray *)photosWithInfoes:(NSArray *)infoes;
+
+- (NSURL *)lowQualityURL;
+- (NSURL *)highQualityURL;
 
 @end
