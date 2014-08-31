@@ -10,7 +10,7 @@
 
 @interface PSRFlickrPhoto()
 
-@property (nonatomic, strong) NSDictionary *info;
+@property (nonatomic,readwrite, strong) NSDictionary *info;
 
 @end
 

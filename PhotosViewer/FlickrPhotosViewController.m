@@ -6,17 +6,19 @@
 //  Copyright (c) 2014 n.shubenkov. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "FlickrPhotosViewController.h"
 
 #import <SDWebImage/UIImageView+WebCache.h>
 
 #import "PSRFlickrAPI.h"
 #import "PSRFlickrPhoto.h"
+#import "PSRClassWichPerformsAsyncOperations.h"
 
-@interface ViewController ()
+@interface FlickrPhotosViewController ()
+@property (nonatomic, strong) PSRFlickrSearchOptions *searchOptions;
 @end
 
-@implementation ViewController
+@implementation FlickrPhotosViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -30,6 +32,7 @@
     //add any tags you want
     PSRFlickrSearchOptions *options = [[PSRFlickrSearchOptions alloc]initWithTags:@[@"Kremlin]",@"arbat",@"gorky park"]];
     
+    //customise search options as you would like
     options.itemsLimit = 55;
     options.page = 22;
     options.coordinate = CLLocationCoordinate2DMake(55.756151, 37.61727);
@@ -41,15 +44,35 @@
                       @"geo",
                       @"date_upload",
                       @"owner_name"];
-
+    self.searchOptions = options;
     //this operation may take several seconds
-    NSArray *photos = [[[PSRFlickrAPI alloc]init] requestPhotosWithOptions:options];
-    NSParameterAssert(photos.count > 0);
+    }
+
+- (IBAction)loadPhotosWithSDWebImage:(id)sender
+{
+    //this operation takes a while. you should perform it in background
+    NSArray *photos = [[[PSRFlickrAPI alloc]init] requestPhotosWithOptions:self.searchOptions];
     [self showPhotosFromEnumerator:[photos objectEnumerator]];
-//    [self showPhotosWithWebImageWithEnumerator:[photos objectEnumerator]
-//                                   placeHolder:nil];
 }
 
+- (IBAction)loadPhotosWithCustomHandling:(id)sender
+{
+    //this operation takes a while. you should perform it in background
+    NSArray *photos = [[[PSRFlickrAPI alloc]init] requestPhotosWithOptions:self.searchOptions];
+    [self showPhotosWithWebImageWithEnumerator:[photos objectEnumerator]
+                                   placeHolder:nil];
+
+}
+
+//example of custom class with complition
+- (IBAction)exampleWithComplition:(id)sender
+{
+    //this operation will hang for a while. Implement in subclass in background
+    PSRClassWichPerformsSomethingWithComplitionBlock *customClassWithComplition = [PSRClassWichPerformsSomethingWithComplitionBlock new];
+    [customClassWithComplition performSomeOperationWithComplition:^(id result) {
+        NSLog(@"task finished");
+    }];
+}
 
 
 - (void)showPhotosWithWebImageWithEnumerator:(NSEnumerator *)enumarator placeHolder:(UIImage *)placeHolder

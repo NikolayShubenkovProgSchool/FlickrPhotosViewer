@@ -11,7 +11,7 @@
 @interface PSRFlickrPhoto : NSObject
 
 + (instancetype)photoWithInfo:(NSDictionary *)info;
-
+@property (nonatomic, readonly, strong) NSDictionary *info;
 //return Array of FlickrPhoto instanses
 //parse photos for some sec, so interface may freeze for some time
 //if you call it from main thread
