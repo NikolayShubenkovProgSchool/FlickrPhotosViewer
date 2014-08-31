@@ -1,15 +1,13 @@
 //
-//  ViewController.h
+//  PSRPhotoCell.m
 //  PhotosViewer
 //
 //  Created by n.shubenkov on 29/08/14.
 //  Copyright (c) 2014 n.shubenkov. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PSRPhotoCell.h"
 
-@interface ViewController : UIViewController
-
+@implementation PSRPhotoCell
 
 @end
-
